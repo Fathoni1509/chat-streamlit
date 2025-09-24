@@ -2,7 +2,7 @@ import streamlit as st
 import pika, threading, json
 from datetime import datetime
 
-RABBIT_URL = "amqps://username:password@host/vhost"
+RABBIT_URL = "amqps://txnuaima:P82-IuzP7j0lY1H0xG_f1w2lRudjUy4t@vulture.rmq.cloudamqp.com/txnuaima"
 QUEUE_NAME = "chat_queue"
 
 # Input username
@@ -51,3 +51,4 @@ if st.button("Kirim"):
 # Tampilkan pesan
 for m in st.session_state["messages"]:
     st.write(m)
+
