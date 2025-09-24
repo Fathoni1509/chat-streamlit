@@ -6,8 +6,13 @@ RABBIT_URL = "amqps://txnuaima:P82-IuzP7j0lY1H0xG_f1w2lRudjUy4t@vulture.rmq.clou
 QUEUE_NAME = "chat_queue"
 
 # Input username
-if "username" not in st.session_state:
+# Input username (wajib)
+if "username" not in st.session_state or not st.session_state["username"]:
     st.session_state["username"] = st.text_input("Masukkan nama Anda:")
+
+if not st.session_state["username"]:
+    st.warning("Masukkan nama Anda dulu sebelum mengirim pesan.")
+    st.stop()
 
 # Setup koneksi (sekali aja)
 if "connection" not in st.session_state:
@@ -24,7 +29,8 @@ if "messages" not in st.session_state:
 # Callback untuk pesan masuk
 def callback(ch, method, properties, body):
     data = json.loads(body.decode())
-    st.session_state["messages"].append(f"📩 [{data['timestamp']}] {data['sender']}: {data['text']}")
+    if data["sender"] != st.session_state["username"]:
+        st.session_state["messages"].append(f"📩 [{data['timestamp']}] {data['sender']}: {data['text']}")
 
 # Jalankan consumer di thread
 def start_consumer():
@@ -50,5 +56,6 @@ if st.button("Kirim"):
 # Tampilkan pesan
 for m in st.session_state["messages"]:
     st.write(m)
+
 
 
