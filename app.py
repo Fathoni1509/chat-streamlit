@@ -24,8 +24,7 @@ if "messages" not in st.session_state:
 # Callback untuk pesan masuk
 def callback(ch, method, properties, body):
     data = json.loads(body.decode())
-    if data["sender"] != st.session_state["username"]:
-        st.session_state["messages"].append(f"📩 [{data['timestamp']}] {data['sender']}: {data['text']}")
+    st.session_state["messages"].append(f"📩 [{data['timestamp']}] {data['sender']}: {data['text']}")
 
 # Jalankan consumer di thread
 def start_consumer():
@@ -51,4 +50,5 @@ if st.button("Kirim"):
 # Tampilkan pesan
 for m in st.session_state["messages"]:
     st.write(m)
+
 
