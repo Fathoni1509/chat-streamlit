@@ -39,8 +39,8 @@ def listen_messages():
 
             def callback(ch, method, properties, body):
                 msg = body.decode()
-                if msg not in st.session_state["messages"]:
-                    st.session_state["messages"].append(msg)
+                # tambahkan ke session_state
+                st.session_state["messages"].append(msg)
 
             channel.basic_consume(
                 queue="chat_room",
@@ -50,7 +50,7 @@ def listen_messages():
             channel.start_consuming()
         except Exception as e:
             print("Listener error:", e)
-            time.sleep(5)  # retry kalau error
+            time.sleep(5)  # retry
 
 # Jalankan listener hanya sekali
 if "listener_started" not in st.session_state:
@@ -61,13 +61,6 @@ if "listener_started" not in st.session_state:
 # Streamlit UI
 # =====================
 st.title("💬 Chat Room (AMQP + Streamlit)")
-
-# Auto refresh setiap 2 detik
-st_autorefresh = st.experimental_rerun if hasattr(st, "experimental_rerun") else None
-st_autorefresh = st.autorefresh if hasattr(st, "autorefresh") else None
-
-st_autorefresh = st_autorefresh or st.autorefresh
-st_autorefresh(interval=2000, key="refresh_chat")
 
 # Input nama pengguna (sekali di awal)
 if "username" not in st.session_state:
